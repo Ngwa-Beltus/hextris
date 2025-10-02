@@ -5,14 +5,14 @@ pipeline {
     dockerImage = ""
   }
     stages {
-        stage(building image) {
+        stage('building image') {
             steps {
               script{
                 dockerImage = docker.build dockerimagename
               }
             }
         }
-        stage(pushing image) {
+        stage('pushing image') {
             environment {
                 registryCredential = 'dockerhublogin'
             }
@@ -23,7 +23,7 @@ pipeline {
                     }
                 }
         }
-        stage(deployment) {
+        stage('deployment') {
                 steps {
                     script{
                         kubernetesDeploy(configs: "Deployment.yaml", kubeconfigId: "kubernetes")
