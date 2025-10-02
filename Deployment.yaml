@@ -15,7 +15,7 @@ spec:
         app: hextris
     spec:
       containers:
-      - image: beltusproject/hextris:1.0
+      - image: beltus325/hextris:latest
         name: hextris
         resources: 
           requests:
