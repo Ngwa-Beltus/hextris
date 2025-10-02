@@ -47,57 +47,57 @@ status:
 
 ---
 
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  labels:
-    app.kubernetes.io/component: controller
-  name: ingress-class-hextris
-  annotations:
-    ingressclass.kubernetes.io/is-default-class: "true"
-spec:
-  controller: k8s.io/ingress-nginx
+# apiVersion: networking.k8s.io/v1
+# kind: IngressClass
+# metadata:
+#   labels:
+#     app.kubernetes.io/component: controller
+#   name: ingress-class-hextris
+#   annotations:
+#     ingressclass.kubernetes.io/is-default-class: "true"
+# spec:
+#   controller: k8s.io/ingress-nginx
 
 
----
+# ---
 
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: hextris
-spec:
-  defaultBackend:
-    service:
-      name: hextris-service
-      port:
-        number: 80
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hextris
+# spec:
+#   defaultBackend:
+#     service:
+#       name: hextris-service
+#       port:
+#         number: 80
 
----
+# ---
 
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: nginx-ingress-controller
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx-ingress
-  template:
-    metadata:
-      labels:
-        app: nginx-ingress
-    spec:
-      containers:
-      - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
-        name: nginx-ingress-controller
-      args:
-      - /nginx-ingress-controller
-      - -- configmap=$(POD_NAMESPACE)/nginx-configuration
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: nginx-ingress-controller
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: nginx-ingress
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx-ingress
+#     spec:
+#       containers:
+#       - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+#         name: nginx-ingress-controller
+#       args:
+#       - /nginx-ingress-controller
+#       - -- configmap=$(POD_NAMESPACE)/nginx-configuration
 
----
+# ---
 
-apiVersion: v1
-kind: configmap
-metadata:
-    name: nginx-configuration
+# apiVersion: v1
+# kind: configmap
+# metadata:
+#     name: nginx-configuration
