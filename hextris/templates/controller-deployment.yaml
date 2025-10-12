@@ -1,10 +1,11 @@
-apiVersion: extensions/v1beta1
+{{- if .Values.nginxIngressController.enabled }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress-controller
   namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.nginxIngressController.replicas }}
   selector:
     matchLabels:
       app: nginx-ingress
@@ -15,7 +16,8 @@ spec:
     spec:
       containers:
         - name: nginx-ingress-controller
-          image: {{ .Values.controller.image }}:{{ .Values.controller.tag }}
+          image: {{ .Values.nginxIngressController.image }}
           args:
             - /nginx-ingress-controller
-            - -- configmap=$(POD_NAMESPACE)/{{ .Values.controller.configmapName }}
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+{{- end }}

@@ -8,15 +8,15 @@ image:
   pullPolicy: IfNotPresent
 
 resources:
-  limits:
-    cpu: 500m
-    memory: 1Gi
   requests:
-    cpu: 250m
-    memory: 500Mi
+    memory: "500Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
 
 service:
-  name: hextris-service
+  type: ClusterIP
   port: 80
 
 ingress:
@@ -26,13 +26,18 @@ ingress:
   tls:
     enabled: true
     secretName: hextris-api-tls-secret
-    issuer: selfsigned-cluster-issuer
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
-controller:
-  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
-  tag: "0.21.0"
-  configmapName: nginx-controller
+nginxIngressController:
+  enabled: true
+  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+  replicas: 1
+
+serviceAccount:
+  name: jenkins-sa
 
 rbac:
-  serviceAccountName: jenkins-sa
-  clusterRoleBindingName: jenkins-admin
+  enabled: true
+  clusterRole: cluster-admin

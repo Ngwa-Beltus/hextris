@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hextris
+  name: {{ include "hextris.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: hextris
+    app: {{ include "hextris.name" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: hextris
+      app: {{ include "hextris.name" . }}
   template:
     metadata:
       labels:
-        app: hextris
+        app: {{ include "hextris.name" . }}
     spec:
       containers:
-        - name: hextris
+        - name: {{ include "hextris.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
-            limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
             requests:
               memory: {{ .Values.resources.requests.memory }}
               cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
