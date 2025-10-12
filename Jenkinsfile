@@ -2,7 +2,7 @@ pipeline {
   agent {
     kubernetes {
       cloud 'kubernetes'
-      defaultContainer 'kubectl'
+      defaultContainer 'helm'
       yaml """
 apiVersion: v1
 kind: Pod
@@ -12,8 +12,8 @@ spec:
   
   serviceAccountName: jenkins-sa
   containers:
-  - name: kubectl
-    image: rgf25/custom_kubectl:v1.0
+  - name: helm
+    image: rgf25/helm-kubectl:v1.0
     command:
     - cat
     tty: true
@@ -32,16 +32,30 @@ spec:
     KUBECONFIG = credentials('kubeconfig')
   }
 
-  stages {
-
+  stages {    
     stage('Deploy to Kubernetes') {
       steps {
-        container('kubectl') {
+        container('helm') {
           sh '''
-          echo "Applying manifests..."
-          kubectl apply -f deployment.yaml -n hextris
-          kubectl rollout status deployment/hextris -n hextris
-          '''
+          echo "Deploying Hextris via Helm..."
+
+          # Lint and verify chart before deploying
+          helm lint ./hextris-1.0.0.tgz
+
+          # Install or upgrade the Helm release
+          helm upgrade --install hextris ./hextris-1.0.0.tgz \
+            --namespace hextris \
+            --create-namespace=false
+
+          # Wait for deployment rollout to complete
+          echo "Waiting 30 seconds for deployment rollout..."
+          sleep 30
+          
+          #Check status of deployment
+          kubectl rollout status deployment/hextris-hextris -n hextris --timeout=180s
+
+          echo "Deployment completed successfully!"
+        '''
         }
       }
     }

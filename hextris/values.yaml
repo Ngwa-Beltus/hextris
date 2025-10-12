@@ -1,0 +1,38 @@
+namespace: hextris
+
+replicaCount: 2
+
+image:
+  repository: beltus325/hextris
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 500Mi
+
+service:
+  name: hextris-service
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  host: hextris.rgfdevops.cloud
+  tls:
+    enabled: true
+    secretName: hextris-api-tls-secret
+    issuer: selfsigned-cluster-issuer
+
+controller:
+  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+  tag: "0.21.0"
+  configmapName: nginx-controller
+
+rbac:
+  serviceAccountName: jenkins-sa
+  clusterRoleBindingName: jenkins-admin

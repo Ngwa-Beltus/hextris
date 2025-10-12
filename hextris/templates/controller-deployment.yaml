@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-ingress-controller
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress
+    spec:
+      containers:
+        - name: nginx-ingress-controller
+          image: {{ .Values.controller.image }}:{{ .Values.controller.tag }}
+          args:
+            - /nginx-ingress-controller
+            - -- configmap=$(POD_NAMESPACE)/{{ .Values.controller.configmapName }}
