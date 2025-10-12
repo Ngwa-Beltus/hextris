@@ -40,10 +40,10 @@ spec:
           echo "Deploying Hextris via Helm..."
 
           # Lint and verify chart before deploying
-          helm lint ./hextris-1.0.0.tgz
+          helm lint ./hextris-0.1.0.tgz
 
           # Install or upgrade the Helm release
-          helm upgrade --install hextris ./hextris-1.0.0.tgz \
+          helm upgrade --install hextris ./hextris-0.1.0.tgz \
             --namespace hextris \
             --create-namespace=false
 
